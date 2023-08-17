@@ -1,0 +1,48 @@
+version: "3"
+services:
+  web:
+    build: 
+      dockerfile: ./Dockerfile_web
+    tty: true
+    ports:
+      - "80:80"
+    privileged: true                           
+    command: /sbin/init
+    depends_on:
+      - ap
+  ap:
+    build: 
+      dockerfile: ./Dockerfile_ap
+    tty: true
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./workspace:/home/theatrecheckinuser/apps
+    depends_on:
+      - db
+  db:
+    build: 
+      dockerfile: ./Dockerfile_db
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+    ports:
+        - 5432:5432
+    environment:
+        # POSTGRES_USER: theatrecheckinuser
+        POSTGRES_PASSWORD: ni8712Ce
+        # POSTGRES_DB: sbsample
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+        - 8888:80
+    volumes:
+        - pgadmin4_data:/var/lib/pgadmin
+    environment:
+        PGADMIN_DEFAULT_EMAIL: nicenaito@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: ni8712Ce
+    depends_on:
+      - db
+
+volumes:
+    postgres_data:
+    pgadmin4_data:

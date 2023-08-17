@@ -1,0 +1,26 @@
+FROM oraclelinux:9
+RUN dnf update
+RUN dnf install -y procps-ng
+RUN dnf install -y findutils
+RUN dnf install -y vim
+RUN dnf install -y net-tools
+RUN dnf install -y procps
+RUN dnf install -y gcc
+RUN dnf install -y cronie-noanacron
+RUN dnf install -y git
+RUN dnf install -y python3.11
+RUN dnf install -y python3.11-pip
+RUN dnf install -y python3.11-devel
+RUN dnf install -y postgresql-devel postgresql-libs
+ARG USERNAME=theatrecheckinuser
+ARG GROUPNAME=theatrecheckinuser
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
+USER $USERNAME
+WORKDIR /home/$USERNAME/apps
+# Dockerfileファイル中に以下のような記述を追加し、8080番ポートを公開する
+EXPOSE 8080
+ADD ./requirements.txt /home/theatrecheckinuser/apps/requirements.txt
+RUN pip3.11 install -r ./requirements.txt

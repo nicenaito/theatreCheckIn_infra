@@ -1,0 +1,8 @@
+FROM oraclelinux:9
+RUN yum update -y
+RUN yum install -y procps-ng
+RUN yum install -y findutils
+RUN yum install -y vim
+RUN yum install -y net-tools
+RUN yum install -y httpd
+RUN systemctl enable httpd.service
